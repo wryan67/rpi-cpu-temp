@@ -29,17 +29,19 @@ struct ContentView: View {
     }
 
     @State var tempCharacteristic : Characteristic?
-
-
     @State var connectionStatusLabel = Text("unknown")
+    @State var hostname = Text("unknown")
+    
+    
     //Label("unknown", systemImage: "42.circle")
 
     //    var connectionStatusLabel: Label<"unknown", NULL>
     
     var body: some View {
         VStack {
-            Text("Hello, world!")
-                .padding()
+            Text("Rasperry Pi CPU Temp").padding()
+
+            hostname.padding()
             
             connectionStatusLabel
             
@@ -61,7 +63,7 @@ struct ContentView: View {
             let s = String(data:(self.tempCharacteristic?.dataValue)!, encoding: .utf8) ?? "unknown"
             
             DispatchQueue.main.async {
-                message(msg: "value is " + s)
+                message(msg: "Temperature: " + s)
             }
         }
         readFuture?.onFailure { (_) in
@@ -150,6 +152,7 @@ struct ContentView: View {
             DispatchQueue.main.async {
 //                message(msg: "Found peripheral \(peripheral.identifier.uuidString). \nTrying to connect...")
                 message(msg: "Found peripheral \(peripheral.name)\nwith \(peripheral.services.count) services\nconnecting...")
+                hostname = Text("hostname: "+peripheral.name)
             }
             //connect to the peripheral in order to trigger the connected mode
             return peripheral.connect(connectionTimeout: 20, capacity: 5)
