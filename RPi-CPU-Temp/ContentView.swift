@@ -79,10 +79,8 @@ struct ContentView: View {
         var peripheral: Peripheral?
         let tempCharacteristicUUID = CBUUID(string:RaspberryPi.TemperatureService.tempCharacteristicUUID)
        
-        let manager = CentralManager(options: [CBCentralManagerOptionRestoreIdentifierKey : "RPiCPUTemp" as NSString])
-        
-        manager.reset()
-        
+//        let manager = CentralManager(options: [CBCentralManagerOptionRestoreIdentifierKey : "RPiCPUTemp2" as NSString])
+        let manager = CentralManager()
         
 
 
