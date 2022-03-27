@@ -11,7 +11,7 @@ import BlueCapKit
 //import Foundation
 
 struct ContentView: View {
-    let manager = CentralManager(options: [CBCentralManagerOptionRestoreIdentifierKey : "us.gnos.BlueCap.central-manager-documentation" as NSString])
+//    let manager = CentralManager(options: [CBCentralManagerOptionRestoreIdentifierKey : "us.gnos.BlueCap.central-manager-documentation" as NSString])
 
     public enum AppError : Error {
         case dataCharactertisticNotFound
@@ -27,7 +27,8 @@ struct ContentView: View {
         case unlikely
         case tag10
     }
-    
+
+    @State var tempCharacteristic : Characteristic?
 
 
     @State var connectionStatusLabel = Text("unknown")
@@ -42,21 +43,45 @@ struct ContentView: View {
             
             connectionStatusLabel
             
-        }.onAppear(perform: load)
+        }.onAppear(perform: activate)
+    }
+    
+    func message(msg: String) {
+        print(msg)
+        connectionStatusLabel = Text(msg)
+    }
+
+    func read(){
+        //read a value from the characteristic
+        let readFuture = self.tempCharacteristic?.read(timeout: 5)
+        readFuture?.onSuccess { (_) in
+            //the value is in the dataValue property
+            
+            //let s = String(data:(self.tempCharacteristic?.dataValue)!, encoding: .utf8)
+            let s = String(data:(self.tempCharacteristic?.dataValue)!, encoding: .utf8) ?? "unknown"
+            
+            DispatchQueue.main.async {
+                message(msg: "value is " + s)
+            }
+        }
+        readFuture?.onFailure { (_) in
+            message(msg: "read error")
+        }
     }
     
     
-
-    func load() {
-        print("load...")
-        connectionStatusLabel = Text("loading...")
+    func activate() {
+        message(msg: "Activating...")
         
         let serviceUUID = CBUUID(string:RaspberryPi.TemperatureService.uuid)
-        let deviceUUID = CBUUID(string:RaspberryPi.uuid)
         var peripheral: Peripheral?
         let tempCharacteristicUUID = CBUUID(string:RaspberryPi.TemperatureService.tempCharacteristicUUID)
        
         let manager = CentralManager(options: [CBCentralManagerOptionRestoreIdentifierKey : "CentralMangerKey" as NSString])
+        
+        
+
+
         
         let stateChangeFuture = manager.whenStateChanges()
         print("tag10...")
@@ -65,12 +90,10 @@ struct ContentView: View {
             state -> FutureStream<Peripheral> in switch state {
                 case .poweredOn:
                     DispatchQueue.main.async {
-                        let message = "scanning<\(deviceUUID.uuidString)>..."
-                        connectionStatusLabel = Text(message)
-                        print(message)
+                        message(msg:"scanning<\(serviceUUID.uuidString)>...")
                     }
                     //scan for peripherlas that advertise the ec00 service
-                    return manager.startScanning(forServiceUUIDs: [deviceUUID], capacity: 10)
+                    return manager.startScanning(forServiceUUIDs: [serviceUUID], capacity: 10)
                 case .poweredOff:
                     print("powered off")
                     throw AppError.poweredOff
@@ -125,9 +148,8 @@ struct ContentView: View {
                 throw AppError.unknown
             }
             DispatchQueue.main.async {
-                let msg="Found peripheral \(peripheral.identifier.uuidString). \nTrying to connect..."
-                print(msg)
-                connectionStatusLabel = Text(msg)
+//                message(msg: "Found peripheral \(peripheral.identifier.uuidString). \nTrying to connect...")
+                message(msg: "Found peripheral \(peripheral.name)\nwith \(peripheral.services.count) services\nconnecting...")
             }
             //connect to the peripheral in order to trigger the connected mode
             return peripheral.connect(connectionTimeout: 20, capacity: 5)
@@ -153,9 +175,8 @@ struct ContentView: View {
                 }
                 peripheral = discoveredPeripheral
                 DispatchQueue.main.async {
-                    let msg="Discovered service \(service.uuid.uuidString). Trying to discover chracteristics"
-                    print(msg)
-                    connectionStatusLabel = Text(msg)                }
+                    message(msg: "Discovered service \(service.uuid.uuidString). Trying to discover chracteristics")
+                }
                 //we have discovered the service, the next step is to discover the "ec0e" characteristic
                 return service.discoverCharacteristics([tempCharacteristicUUID])
         }
@@ -174,14 +195,29 @@ struct ContentView: View {
             guard let dataCharacteristic = discoveredPeripheral.services(withUUID:serviceUUID)?.first?.characteristics(withUUID:tempCharacteristicUUID)?.first else {
                 throw AppError.dataCharactertisticNotFound
             }
+            tempCharacteristic = dataCharacteristic
             DispatchQueue.main.async {
-                let msg="Discovered characteristic \(dataCharacteristic.uuid.uuidString). "
-                print(msg)
-                connectionStatusLabel = Text(msg)
+                message(msg: "Discovered characteristic \(dataCharacteristic.uuid.uuidString)")
             }
-            throw AppError.tag10
+            //when we successfully discover the characteristic, we can show the characteritic view
+//            DispatchQueue.main.async {
+//                self.loadingView.isHidden = true
+//                self.characteristicView.isHidden = false
+//            }
+            //read the data from the characteristic
+            self.read()
+            //Ask the characteristic to start notifying for value change
+            return dataCharacteristic.startNotifying()
+            }.flatMap { _ -> FutureStream<Data?> in
+                guard let discoveredPeripheral = peripheral else {
+                    throw AppError.unknown
+                }
+                guard let characteristic = discoveredPeripheral.services(withUUID:serviceUUID)?.first?.characteristics(withUUID:tempCharacteristicUUID)?.first else {
+                    throw AppError.dataCharactertisticNotFound
+                }
+                //regeister to recieve a notifcation when the value of the characteristic changes and return a future that handles these notifications
+                return characteristic.receiveNotificationUpdates(capacity: 10)
         }
-    
         
         //The onSuccess method is called every time the characteristic value changes
 //        dataFuture.onSuccess { data in
