@@ -223,12 +223,14 @@ struct ContentView: View {
         }
         
         //The onSuccess method is called every time the characteristic value changes
-//        dataFuture.onSuccess { data in
+        dataFuture.onSuccess { data in
 //            let s = String(data:data!, encoding: .utf8)
-//            DispatchQueue.main.async {
-//                self.notifiedValueLabel.text = "notified value is \(String(describing: s))"
-//            }
-//        }
+            let s = String(data:data!, encoding: .utf8) ?? "unknown"
+            
+            DispatchQueue.main.async {
+                message(msg: "Temperature: " + s)
+            }
+        }
 
     }
 }
