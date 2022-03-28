@@ -62,6 +62,11 @@ struct ContentView: View {
                     hostname.padding()
                     
                     connectionStatusLabel
+                    
+                    Picker(selection: $units, label: Text("Units:")) {
+                        Text("Fahrenheit").tag(TemperatureUnitType.fahrenheit)
+                        Text("Celsius").tag(TemperatureUnitType.celsius)
+                    }.onChange(of: units, perform: { (value) in modifyService() } )
                
                 }
 
