@@ -40,7 +40,7 @@ class Advertisement(dbus.service.Object):
         self.ad_type = advertising_type
         self.local_name = None
 #        self.service_uuids = None
-        self.service_uuids = ["00000001-710e-4a5b-8d75-3e5b444bc3cf"]
+        self.service_uuids = ["00000001-9233-4a5b-8d75-3e5b444bc3cf"]
         self.solicit_uuids = None
         self.manufacturer_data = None
         self.service_data = None

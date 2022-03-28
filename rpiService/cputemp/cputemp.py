@@ -37,7 +37,7 @@ class ThermometerAdvertisement(Advertisement):
         self.include_tx_power = True
 
 class ThermometerService(Service):
-    THERMOMETER_SVC_UUID = "00000001-710e-4a5b-8d75-3e5b444bc3cf"
+    THERMOMETER_SVC_UUID = "00000001-9233-4a5b-8d75-3e5b444bc3cf"
 
     def __init__(self, index):
         self.farenheit = False
@@ -53,7 +53,7 @@ class ThermometerService(Service):
         self.farenheit = farenheit
 
 class TempCharacteristic(Characteristic):
-    TEMP_CHARACTERISTIC_UUID = "00000002-710e-4a5b-8d75-3e5b444bc3cf"
+    TEMP_CHARACTERISTIC_UUID = "00000002-9233-4a5b-8d75-3e5b444bc3cf"
 
     def __init__(self, service):
         self.notifying = False
@@ -124,7 +124,7 @@ class TempDescriptor(Descriptor):
         return value
 
 class UnitCharacteristic(Characteristic):
-    UNIT_CHARACTERISTIC_UUID = "00000003-710e-4a5b-8d75-3e5b444bc3cf"
+    UNIT_CHARACTERISTIC_UUID = "00000003-9233-4a5b-8d75-3e5b444bc3cf"
 
     def __init__(self, service):
         Characteristic.__init__(
