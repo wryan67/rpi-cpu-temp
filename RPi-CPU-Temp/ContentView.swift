@@ -47,6 +47,22 @@ struct ContentView: View {
             
         }.onAppear(perform: activate)
     }
+    func messageTemp(temp: String) {
+        let date = Date()
+        let calendar = Calendar.current
+        
+        let year = calendar.component(.year, from: date)
+        let month = calendar.component(.month, from: date)
+        let day = calendar.component(.day, from: date)
+
+        let hh = calendar.component(.hour, from: date)
+        let mm = calendar.component(.minute, from: date)
+        let ss = calendar.component(.second, from: date)
+
+        let time = String(format:"%04d-%02d-%02d %02d:%02d:%02d", year,month,day, hh,mm,ss)
+        message(msg: time+"\nTemperature: " + temp)
+
+    }
     
     func message(msg: String) {
         print(msg)
@@ -63,7 +79,7 @@ struct ContentView: View {
             let s = String(data:(self.tempCharacteristic?.dataValue)!, encoding: .utf8) ?? "unknown"
             
             DispatchQueue.main.async {
-                message(msg: "Temperature: " + s)
+                messageTemp(temp: s)
             }
         }
         readFuture?.onFailure { (_) in
@@ -228,7 +244,7 @@ struct ContentView: View {
             let s = String(data:data!, encoding: .utf8) ?? "unknown"
             
             DispatchQueue.main.async {
-                message(msg: "Temperature: " + s)
+                messageTemp(temp: s)
             }
         }
 
