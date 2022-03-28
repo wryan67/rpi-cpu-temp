@@ -33,7 +33,7 @@ NOTIFY_TIMEOUT = 5000
 class ThermometerAdvertisement(Advertisement):
     def __init__(self, index):
         Advertisement.__init__(self, index, "peripheral")
-        self.add_local_name("Thermometer")
+        self.add_local_name("RPiCPUTemp")
         self.include_tx_power = True
 
 class ThermometerService(Service):
