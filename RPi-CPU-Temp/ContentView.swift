@@ -164,7 +164,12 @@ struct ContentView: View {
             
             DispatchQueue.main.async {
                 messageTemp(temp: s)
-                
+                let unit = s.last!
+                if (unit.uppercased()=="F") {
+                    units=TemperatureUnitType.fahrenheit
+                } else {
+                    units=TemperatureUnitType.celsius
+                }
             }
         }
         readFuture?.onFailure { (_) in
