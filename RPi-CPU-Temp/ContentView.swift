@@ -52,7 +52,10 @@ struct ContentView: View {
     var body: some View {
         VStack {
 
-            if (UIDevice.current.orientation.isLandscape) {
+            if (UIDevice.current.orientation.isLandscape ||
+                UIDevice.current.orientation.isFlat ||
+               !UIDevice.current.orientation.isValidInterfaceOrientation
+            ) {
 
                 HStack {
                     Image("icon")
