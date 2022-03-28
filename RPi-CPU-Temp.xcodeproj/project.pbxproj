@@ -16,6 +16,7 @@
 		8405EA1B27ED534C00F7B32E /* RaspberryPi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8405EA1A27ED534C00F7B32E /* RaspberryPi.swift */; };
 		841D3B9827EED3660054023C /* BlueCapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 841D3B9627EED34F0054023C /* BlueCapKit.framework */; };
 		841D3B9927EED3660054023C /* BlueCapKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 841D3B9627EED34F0054023C /* BlueCapKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		844E57BD27F14D4F005E4BEC /* icon in Resources */ = {isa = PBXBuildFile; fileRef = 844E57BB27F14D4F005E4BEC /* icon */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,6 +69,7 @@
 		8405EA0627EAE11200F7B32E /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		8405EA1A27ED534C00F7B32E /* RaspberryPi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RaspberryPi.swift; sourceTree = "<group>"; };
 		841D3B9127EED34F0054023C /* BlueCapKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BlueCapKit.xcodeproj; path = BlueCap/BlueCapKit.xcodeproj; sourceTree = "<group>"; };
+		844E57BB27F14D4F005E4BEC /* icon */ = {isa = PBXFileReference; lastKnownFileType = folder; path = icon; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,6 +128,7 @@
 		8405E9EA27EAB15800F7B32E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				844E57BB27F14D4F005E4BEC /* icon */,
 				8405EA0627EAE11200F7B32E /* CoreLocation.framework */,
 				8405E9EE27EADF4200F7B32E /* BlueCapKit.xcodeproj */,
 				8405E9EB27EAB15800F7B32E /* CoreBluetooth.framework */,
@@ -237,6 +240,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8405E9E327EAA30A00F7B32E /* Preview Assets.xcassets in Resources */,
+				844E57BD27F14D4F005E4BEC /* icon in Resources */,
 				8405E9E027EAA30A00F7B32E /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
