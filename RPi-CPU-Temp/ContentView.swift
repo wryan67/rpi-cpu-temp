@@ -46,8 +46,8 @@ struct ContentView: View {
     @State var tempCharacteristic : Characteristic?
     @State var unitCharacteristic : Characteristic?
     @State var connectionStatusLabel = Text("unknown")
-    @State var hostname = Text("unknown")
-    @State var units = TemperatureUnitType.fahrenheit
+    @State var hostname = Text("Hostname: unknown")
+    @State var units = TemperatureUnitType.celsius
     
     var body: some View {
         VStack {
@@ -202,7 +202,7 @@ struct ContentView: View {
             state -> FutureStream<Peripheral> in switch state {
                 case .poweredOn:
                     DispatchQueue.main.async {
-                        message(msg:"scanning<\(serviceUUID.uuidString)>...")
+                        message(msg:"Scanning...")
                     }
                     //scan for peripherlas that advertise the ec00 service
                     return manager.startScanning(forServiceUUIDs: [serviceUUID], capacity: 10)
@@ -262,7 +262,7 @@ struct ContentView: View {
             DispatchQueue.main.async {
 //                message(msg: "Found peripheral \(peripheral.identifier.uuidString). \nTrying to connect...")
                 message(msg: "Found peripheral \(peripheral.name)\nwith \(peripheral.services.count) services\nconnecting...")
-                hostname = Text("hostname: "+peripheral.name)
+                hostname = Text("Hostname: "+peripheral.name)
             }
             //connect to the peripheral in order to trigger the connected mode
             return peripheral.connect(connectionTimeout: 20, capacity: 5)
