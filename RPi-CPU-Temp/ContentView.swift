@@ -44,6 +44,7 @@ struct ContentView: View {
     }
 
     @State var tempCharacteristic : Characteristic?
+    @State var unitCharacteristic : Characteristic?
     @State var connectionStatusLabel = Text("unknown")
     @State var hostname = Text("unknown")
     @State var units = TemperatureUnitType.fahrenheit
@@ -88,7 +89,9 @@ struct ContentView: View {
     }
 
     func modifyService() {
-        
+        let serviceUUID = CBUUID(string:RaspberryPi.TemperatureService.uuid)
+        let unitCharacteristicUUID = CBUUID(string:RaspberryPi.TemperatureService.unitCharacteristicUUID)
+
         print("modifying rpi service units to \(units)")
         if (peripheral==nil) {
             if (units==TemperatureUnitType.fahrenheit) {
@@ -98,6 +101,30 @@ struct ContentView: View {
             }
         } else {
 //            peripheral?.discoverServices([CBUUID(TemperatureService.unitCharacteristicUUID)])
+            guard let discoveredPeripheral = peripheral else {
+                print("e602: unknown error")
+                return
+            }
+            guard let dataCharacteristic = discoveredPeripheral.services(withUUID:serviceUUID)?.first?.characteristics(withUUID:unitCharacteristicUUID)?.first else {
+                print("e605 unit characteristic not found")
+                return
+            }
+            unitCharacteristic = dataCharacteristic
+            print("modifying unit characteristic")
+            
+            guard let unit: String = ((units==TemperatureUnitType.fahrenheit) ? "F" : "C") else {
+                return;
+            }
+            
+            let writeFuture = self.unitCharacteristic?.write(data:unit.data(using: .utf8)!)
+
+            writeFuture?.onSuccess(completion: { (_) in
+                read()
+            })
+            
+//            DispatchQueue.main.async {
+//                message(msg: "Discovered characteristic \(dataCharacteristic.uuid.uuidString)")
+//            }
         }
         
     }
@@ -137,6 +164,7 @@ struct ContentView: View {
             
             DispatchQueue.main.async {
                 messageTemp(temp: s)
+                
             }
         }
         readFuture?.onFailure { (_) in
@@ -150,7 +178,8 @@ struct ContentView: View {
         
         let serviceUUID = CBUUID(string:RaspberryPi.TemperatureService.uuid)
         let tempCharacteristicUUID = CBUUID(string:RaspberryPi.TemperatureService.tempCharacteristicUUID)
-       
+        let unitCharacteristicUUID = CBUUID(string:RaspberryPi.TemperatureService.unitCharacteristicUUID)
+
         
 
 
@@ -253,7 +282,7 @@ struct ContentView: View {
                 message(msg: "Discovered service \(service.uuid.uuidString). Trying to discover chracteristics")
             }
             //we have discovered the service, the next step is to discover the "ec0e" characteristic
-            return service.discoverCharacteristics([tempCharacteristicUUID])
+            return service.discoverCharacteristics([tempCharacteristicUUID,unitCharacteristicUUID])
         }
         
         
