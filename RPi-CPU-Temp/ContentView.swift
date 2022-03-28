@@ -52,26 +52,8 @@ struct ContentView: View {
     var body: some View {
         VStack {
 
-            if (UIDevice.current.orientation.isPortrait) {
-                VStack {
-                    Image("icon")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .padding(.horizontal, 100.0)
+            if (UIDevice.current.orientation.isLandscape) {
 
-                    hostname.padding()
-                    
-                    connectionStatusLabel
-                    
-                    Picker(selection: $units, label: Text("Units:")) {
-                        Text("Fahrenheit").tag(TemperatureUnitType.fahrenheit)
-                        Text("Celsius").tag(TemperatureUnitType.celsius)
-                    }.onChange(of: units, perform: { (value) in modifyService() } )
-               
-                }
-
-            } else {
-                
                 HStack {
                     Image("icon")
                         .resizable()
@@ -88,6 +70,25 @@ struct ContentView: View {
                         }.onChange(of: units, perform: { (value) in modifyService() } )
                     }
                 }
+
+            } else {
+
+                VStack {
+                    Image("icon")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .padding(.horizontal, 100.0)
+
+                    hostname.padding()
+                    
+                    connectionStatusLabel
+                    
+                    Picker(selection: $units, label: Text("Units:")) {
+                        Text("Fahrenheit").tag(TemperatureUnitType.fahrenheit)
+                        Text("Celsius").tag(TemperatureUnitType.celsius)
+                    }.onChange(of: units, perform: { (value) in modifyService() } )
+                }
+                
             }
 
         }.onAppear(perform: activate)
