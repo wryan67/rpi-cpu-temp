@@ -13,10 +13,11 @@
 		8405E9E327EAA30A00F7B32E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8405E9E227EAA30A00F7B32E /* Preview Assets.xcassets */; };
 		8405EA0D27EAE53600F7B32E /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8405E9EB27EAB15800F7B32E /* CoreBluetooth.framework */; };
 		8405EA0E27EAE55500F7B32E /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8405EA0627EAE11200F7B32E /* CoreLocation.framework */; };
-		8405EA1B27ED534C00F7B32E /* RaspberryPi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8405EA1A27ED534C00F7B32E /* RaspberryPi.swift */; };
+		8405EA1B27ED534C00F7B32E /* TemperatureService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8405EA1A27ED534C00F7B32E /* TemperatureService.swift */; };
 		841D3B9827EED3660054023C /* BlueCapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 841D3B9627EED34F0054023C /* BlueCapKit.framework */; };
 		841D3B9927EED3660054023C /* BlueCapKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 841D3B9627EED34F0054023C /* BlueCapKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		844E57BD27F14D4F005E4BEC /* icon in Resources */ = {isa = PBXBuildFile; fileRef = 844E57BB27F14D4F005E4BEC /* icon */; };
+		84EDDD7127F1696300AB87FE /* TemperatureUnitType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EDDD7027F1696300AB87FE /* TemperatureUnitType.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,9 +68,10 @@
 		8405E9EB27EAB15800F7B32E /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		8405E9EE27EADF4200F7B32E /* BlueCapKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BlueCapKit.xcodeproj; path = BlueCap/BlueCapKit.xcodeproj; sourceTree = "<group>"; };
 		8405EA0627EAE11200F7B32E /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
-		8405EA1A27ED534C00F7B32E /* RaspberryPi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RaspberryPi.swift; sourceTree = "<group>"; };
+		8405EA1A27ED534C00F7B32E /* TemperatureService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TemperatureService.swift; sourceTree = "<group>"; };
 		841D3B9127EED34F0054023C /* BlueCapKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BlueCapKit.xcodeproj; path = BlueCap/BlueCapKit.xcodeproj; sourceTree = "<group>"; };
 		844E57BB27F14D4F005E4BEC /* icon */ = {isa = PBXFileReference; lastKnownFileType = folder; path = icon; sourceTree = "<group>"; };
+		84EDDD7027F1696300AB87FE /* TemperatureUnitType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemperatureUnitType.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,9 +112,10 @@
 				8405E9E927EAB0CF00F7B32E /* Info.plist */,
 				8405E9DB27EAA30700F7B32E /* RPi_CPU_TempApp.swift */,
 				8405E9DD27EAA30700F7B32E /* ContentView.swift */,
-				8405EA1A27ED534C00F7B32E /* RaspberryPi.swift */,
+				8405EA1A27ED534C00F7B32E /* TemperatureService.swift */,
 				8405E9DF27EAA30A00F7B32E /* Assets.xcassets */,
 				8405E9E127EAA30A00F7B32E /* Preview Content */,
+				84EDDD7027F1696300AB87FE /* TemperatureUnitType.swift */,
 			);
 			path = "RPi-CPU-Temp";
 			sourceTree = "<group>";
@@ -252,8 +255,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8405EA1B27ED534C00F7B32E /* RaspberryPi.swift in Sources */,
+				8405EA1B27ED534C00F7B32E /* TemperatureService.swift in Sources */,
 				8405E9DE27EAA30700F7B32E /* ContentView.swift in Sources */,
+				84EDDD7127F1696300AB87FE /* TemperatureUnitType.swift in Sources */,
 				8405E9DC27EAA30700F7B32E /* RPi_CPU_TempApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

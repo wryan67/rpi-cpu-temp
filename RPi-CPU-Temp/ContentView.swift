@@ -13,6 +13,21 @@ import BlueCapKit
 struct ContentView: View {
 //    let manager = CentralManager(options: [CBCentralManagerOptionRestoreIdentifierKey : "us.gnos.BlueCap.central-manager-documentation" as NSString])
 
+    public enum Orientation {
+        case portrait
+        case landscape
+    }
+
+    
+//        let manager = CentralManager(options: [CBCentralManagerOptionRestoreIdentifierKey : "RPiCPUTemp2" as NSString])
+           let manager = CentralManager()
+    @State var peripheral: Peripheral?
+
+    
+//    @State var connectionFuture: FutureStream<Void>
+    
+
+    
     public enum AppError : Error {
         case dataCharactertisticNotFound
         case enabledCharactertisticNotFound
@@ -31,22 +46,64 @@ struct ContentView: View {
     @State var tempCharacteristic : Characteristic?
     @State var connectionStatusLabel = Text("unknown")
     @State var hostname = Text("unknown")
-    
-    
-    //Label("unknown", systemImage: "42.circle")
-
-    //    var connectionStatusLabel: Label<"unknown", NULL>
+    @State var units = TemperatureUnitType.fahrenheit
     
     var body: some View {
         VStack {
-            Text("Rasperry Pi CPU Temp").padding()
 
-            hostname.padding()
-            
-            connectionStatusLabel
-            
+            if (UIDevice.current.orientation.isPortrait) {
+                VStack {
+                    Image("icon")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .padding(.horizontal, 100.0)
+
+                    hostname.padding()
+                    
+                    connectionStatusLabel
+               
+                }
+
+            } else {
+                
+                HStack {
+                    Image("icon")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .padding(.vertical, 50.0)
+                    VStack {
+                        hostname.padding()
+                        
+                        connectionStatusLabel
+                        
+                        Picker(selection: $units, label: Text("Units:")) {
+                            Text("Fahrenheit").tag(TemperatureUnitType.fahrenheit)
+                            Text("Celsius").tag(TemperatureUnitType.celsius)
+                        }.onChange(of: units, perform: { (value) in modifyService() } )
+                    }
+                }
+            }
+
         }.onAppear(perform: activate)
     }
+
+    func modifyService() {
+        
+        print("modifying rpi service units to \(units)")
+        if (peripheral==nil) {
+            if (units==TemperatureUnitType.fahrenheit) {
+                units=TemperatureUnitType.celsius
+            } else {
+                units=TemperatureUnitType.fahrenheit
+            }
+        } else {
+//            peripheral?.discoverServices([CBUUID(TemperatureService.unitCharacteristicUUID)])
+        }
+        
+    }
+    
+    
+    
     func messageTemp(temp: String) {
         let date = Date()
         let calendar = Calendar.current
@@ -92,11 +149,8 @@ struct ContentView: View {
         message(msg: "Activating...")
         
         let serviceUUID = CBUUID(string:RaspberryPi.TemperatureService.uuid)
-        var peripheral: Peripheral?
         let tempCharacteristicUUID = CBUUID(string:RaspberryPi.TemperatureService.tempCharacteristicUUID)
        
-//        let manager = CentralManager(options: [CBCentralManagerOptionRestoreIdentifierKey : "RPiCPUTemp2" as NSString])
-        let manager = CentralManager()
         
 
 
@@ -183,21 +237,23 @@ struct ContentView: View {
                 throw AppError.unknown
             }
             return peripheral.discoverServices([serviceUUID])
-            }.flatMap { _ -> Future<Void> in
-                guard let discoveredPeripheral = peripheral else {
-                    print("e402: unknown error")
-                    throw AppError.unknown
-                }
-                guard let service = discoveredPeripheral.services(withUUID:serviceUUID)?.first else {
-                    print("e403: servcie not found")
-                    throw AppError.serviceNotFound
-                }
-                peripheral = discoveredPeripheral
-                DispatchQueue.main.async {
-                    message(msg: "Discovered service \(service.uuid.uuidString). Trying to discover chracteristics")
-                }
-                //we have discovered the service, the next step is to discover the "ec0e" characteristic
-                return service.discoverCharacteristics([tempCharacteristicUUID])
+        }
+            
+        let temp = discoveryFuture.flatMap { _ -> Future<Void> in
+            guard let discoveredPeripheral = peripheral else {
+                print("e402: unknown error")
+                throw AppError.unknown
+            }
+            guard let service = discoveredPeripheral.services(withUUID:serviceUUID)?.first else {
+                print("e403: servcie not found")
+                throw AppError.serviceNotFound
+            }
+            peripheral = discoveredPeripheral
+            DispatchQueue.main.async {
+                message(msg: "Discovered service \(service.uuid.uuidString). Trying to discover chracteristics")
+            }
+            //we have discovered the service, the next step is to discover the "ec0e" characteristic
+            return service.discoverCharacteristics([tempCharacteristicUUID])
         }
         
         
@@ -207,7 +263,7 @@ struct ContentView: View {
          1- checks if the characteristic is correctly discovered
          2- Register for notifications using the dataFuture variable
         */
-        let dataFuture = discoveryFuture.flatMap { _ -> Future<Void> in
+        let dataFuture = temp.flatMap { _ -> Future<Void> in
             guard let discoveredPeripheral = peripheral else {
                 throw AppError.unknown
             }
@@ -254,5 +310,6 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+            .previewInterfaceOrientation(.portrait)
     }
 }

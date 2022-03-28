@@ -5,11 +5,8 @@ import Foundation
 import CoreBluetooth
 
 
-// MARK: - TiSensorTag Services -
 public struct RaspberryPi {
-//    public static let uuid = "00000001-710e-4a5b-8d75-3e5b444bc3cf"
 
-    // MARK: - Accelerometer Service -
     public struct TemperatureService  {
         
         // ServiceConfigurable
@@ -19,15 +16,11 @@ public struct RaspberryPi {
         
         public static let tempCharacteristicUUID = "00000002-710e-4a5b-8d75-3e5b444bc3cf"
         public static let unitCharacteristicUUID = "00000003-710e-4a5b-8d75-3e5b444bc3cf"
-
-        
+       
         // data
         public var mode: String
         public var degrees: String
         
-        
-        
     }
-
 }
 
